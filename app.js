@@ -1,22 +1,69 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
+const lineWidth = document.querySelector("#linewidth");
+const color = document.getElementById("color");
+const colorOption = Array.from(document.getElementsByClassName("color-option"));
+
 canvas.width = 600;
 canvas.height = 600;
 
-ctx.fillRect(200, 200, 20, 60);
-ctx.fillRect(310, 200, 20, 60);
+let paintOn = false;
 
-ctx.fillRect(225, 200, 80, 50);
-ctx.fillRect(235, 255, 62, 35);
 
-ctx.fillRect(235, 295, 25, 60);
-ctx.fillRect(270, 295, 25, 60);
+function onMove(event) {
+    if(paintOn) {
+        ctx.lineTo(event.offsetX, event.offsetY);
+        ctx.stroke();
+        return;
+    }
+    ctx.moveTo(event.offsetX, event.offsetY);
+}
 
-ctx.arc(265, 165, 25, 0, 2 * Math.PI);
-ctx.fill();
+function paintStart() {
+    paintOn = true;
+}
 
-ctx.beginPath();
-ctx.arc(255, 160, 5, 0, 1 * Math.PI);
-ctx.arc(275, 160, 5, 0, 1 * Math.PI);
-ctx.fillStyle = "blue";
-ctx.fill();
+function paintEnd() {
+    paintOn = false;
+    ctx.beginPath();
+}
+
+
+function onLineWidth(event) {
+    onColorAndWidthChoice(event);
+}
+
+
+function onColorChange(event) {
+    onColorAndWidthChoice(event);
+}
+
+function onColorOption(event) {
+    onColorOptionClick(event)
+}
+
+
+function onColorAndWidthChoice(event) {
+    if(event.target.id === "color") {
+        const colorValue = event.target.value;
+        ctx.strokeStyle = colorValue;
+        ctx.fillStyle = colorValue;
+    } else if(event.target.id === "linewidth") {
+        ctx.lineWidth = event.target.value;
+    }
+}
+
+function onColorOptionClick(event) {
+    const colorValue = event.target.dataset.color;
+    ctx.strokeStyle = colorValue;
+    ctx.fillStyle = colorValue;
+    color.value = colorValue;
+}
+
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mousedown", paintStart);
+canvas.addEventListener("mouseup", paintEnd);
+canvas.addEventListener("mouseleave", paintEnd);
+lineWidth.addEventListener("change", onLineWidth);
+color.addEventListener("change", onColorChange);
+colorOption.forEach(color => color.addEventListener("click", onColorOption));
