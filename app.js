@@ -10,8 +10,11 @@ const fileInput = document.querySelector("#file");
 const textInput = document.querySelector("#text-input");
 const saveImg = document.querySelector("#save-img");
 
-canvas.width = 600;
-canvas.height = 600;
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 600;
+
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
 ctx.lineCap = "round";
 let paintOn = false;
 let modeBtn = false;
@@ -56,6 +59,7 @@ function onColorAndWidthChoice(event) {
         ctx.fillStyle = colorValue;
     } else if(event.target.id === "linewidth") {
         ctx.lineWidth = event.target.value;
+        console.dir(event);
     }
 }
 
@@ -79,14 +83,14 @@ function onmodeClick() {
 
 function onBgmouseDown() {
     if(modeBtn) {
-        ctx.fillRect(0, 0, 600, 600);
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     }
 }
 
 
 function onDestroyClick() {
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, 600, 600);
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 function onEraserClick() {
@@ -102,7 +106,7 @@ function onImgInput(event) {
     const image = new Image();
     image.src = url;
     image.onload = function(){
-        ctx.drawImage(image, 0, 0, 600, 600);
+        ctx.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         fileInput.value = null;
     }
 }
@@ -112,7 +116,7 @@ function onDuobleClick(event) {
     const text = textInput.value;
     if(text !== "") {
         ctx.save();
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 10;
         ctx.font = "50px serif";
         ctx.fillText(text, event.offsetX, event.offsetY);
         ctx.restore();
@@ -150,3 +154,4 @@ fileInput.addEventListener("change", onImgInput);
 canvas.addEventListener("dblclick", onDuobleClick);
 
 saveImg.addEventListener("click", onSaveImgClick);
+
